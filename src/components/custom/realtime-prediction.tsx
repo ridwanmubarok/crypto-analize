@@ -5,10 +5,12 @@ import { Table,TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/
 import { formatCryptoVolume } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import { ArrowUp,ArrowDown } from 'lucide-react';
-
+import { Input } from "@/components/ui/input"
 
 const RealtimeMarketPrediction = ({ listPairs }:{listPairs:currencyPair[] }) => {
     const { marketData,Loading } = useIndodax({ Initsummary24:true })
+    const [searchTerm, setSearchTerm] = useState("");
+
     const [processedData, setProcessedData] = useState(() => listPairs
     .filter(item => item.ticker_id.endsWith('_idr'))
     .map(item => ({
@@ -78,6 +80,10 @@ const RealtimeMarketPrediction = ({ listPairs }:{listPairs:currencyPair[] }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Loading,marketData]);
 
+    const filteredData = processedData.filter(data =>
+      data.traded_currency.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if(Loading){
         <>
             Mohon Tunggu
@@ -85,15 +91,18 @@ const RealtimeMarketPrediction = ({ listPairs }:{listPairs:currencyPair[] }) => 
     }
 
     return(
-        <Card className="w-full">
-          <CardHeader>
+        <Card>
+          <CardHeader className="flex flex-row justify-between items-center">
               <CardTitle>Analysis</CardTitle>
+              <div className="w-1/2">
+                <Input onChange={(e)=> setSearchTerm(e.target.value)} type="text" placeholder="Search ....." />
+              </div>
           </CardHeader>
           <CardContent>
           <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">Name</TableHead>
+                  <TableHead>Name</TableHead>
                   <TableHead>Last Price</TableHead>
                   <TableHead>Lowest Price</TableHead>
                   <TableHead>Highest Price</TableHead>
@@ -106,7 +115,7 @@ const RealtimeMarketPrediction = ({ listPairs }:{listPairs:currencyPair[] }) => 
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {processedData?.map((data, key) => (
+                {filteredData?.map((data, key) => (
                   <TableRow key={key}>
                     <TableCell className="font-bold uppercase">{data.traded_currency}</TableCell>
                     <TableCell className="font-bold uppercase">{formatCryptoVolume(data.last_price)}</TableCell>
@@ -137,15 +146,15 @@ const RealtimeMarketPrediction = ({ listPairs }:{listPairs:currencyPair[] }) => 
 const renderbadgeIndicator = (status: string) => {
     switch (status) {
         case 'Bullish':
-            return <span className="p-1.5 bg-green-500 text-white rounded-md">{status} </span>
+            return <span className="text-xs font-bold p-1.5 bg-green-500 text-white rounded-md">{status} </span>
         case 'Bearish':
-            return <span className="p-1.5 bg-red-500 text-white rounded-md">{status}</span>
+            return <span className="text-xs font-bold p-1.5 bg-red-500 text-white rounded-md">{status}</span>
         case 'Overbought':
-            return <span className="p-1.5 bg-blue-500 text-white rounded-md">{status}</span>
+            return <span className="text-xs font-bold p-1.5 bg-blue-500 text-white rounded-md">{status}</span>
         case 'High Volatility':
-            return <span className="p-1.5 bg-yellow-500 text-white rounded-md">{status}</span>
+            return <span className="text-xs font-bold p-1.5 bg-yellow-500 text-white rounded-md">{status}</span>
         case 'Oversold':
-            return <span className="p-1.5 bg-orange-500 text-white rounded-md">{status}</span>
+            return <span className="text-xs font-bold p-1.5 bg-orange-500 text-white rounded-md">{status}</span>
     }
 }
 

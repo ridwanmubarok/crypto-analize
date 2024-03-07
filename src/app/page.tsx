@@ -10,9 +10,7 @@ export default function Home() {
     value: item.id
   }));
   return (
-    <main className="flex min-h-screen flex-col p-24">
-
-
+    <main className="flex min-h-screen flex-col lg:p-24 p-3">
         <div className="flex justify-center mb-10 pb-10">
           <div className="flex flex-col justify-center">
               <h1 className="text-7xl text-center font-bold text-white mb-5">TO THE MOON</h1>
@@ -22,41 +20,14 @@ export default function Home() {
               </p>
           </div>
         </div>
-        
         <div className="grid gap-3 grid-cols-12">
-
-            <div className="col-span-12 ">
+            <div className="col-span-12">
               {
                 pair?.length > 0 && (
                   <RealtimeMarketPrediction listPairs={pair}/>
                 )
               }
             </div>
-
-            {/* <div className="col-span-12">
-                <Card>
-                  <CardHeader>
-                      <CardTitle>Summary</CardTitle>
-                      <CardDescription>Real Time Summary</CardDescription>
-                  </CardHeader>
-                  <CardContent className="min-h-[500px]">
-                      {
-                        activePair ? (
-                          <>
-                            <RealTimeMarket currency_id={activePair}/>
-                          </>
-                        ) : (
-                          <>
-                            <div className="h-full flex flex-col justify-center items-center text-gray-500">
-                                Please Select Pair For analytics
-                            </div>
-                          </>
-                        )
-                      }
-                  </CardContent>
-                </Card>
-            </div> */}
-
         </div>
     </main>
   );
