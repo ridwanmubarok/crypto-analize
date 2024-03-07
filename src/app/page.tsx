@@ -1,10 +1,6 @@
 'use client';
 
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card";
-import { CurrencyResponse } from "@/apis/summary/summary.dto";
 import { usePair } from "./hooks/usePair";
-import { SearchSelect } from "@/components/custom/search-select";
-import RealTimeMarket from "@/components/custom/realtime-market-chart";
 import RealtimeMarketPrediction from "@/components/custom/realtime-prediction";
 
 export default function Home() {
