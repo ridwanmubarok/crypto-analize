@@ -75,6 +75,7 @@ const RealtimeMarketPrediction = ({ listPairs }:{listPairs:currencyPair[] }) => 
       }).sort(sortPredictions); 
       setProcessedData(updatedData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Loading,marketData]);
 
     if(Loading){
