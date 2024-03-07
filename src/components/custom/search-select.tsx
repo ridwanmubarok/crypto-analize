@@ -63,7 +63,7 @@ export function SearchSelect({ options,onChange }: SearchSelectProps) {
                     <CommandItem
                       key={key}
                       value={item.value}
-                      onSelect={(currentValue: string) => onChangeSelect(currentValue)}
+                      onSelect={onChangeSelect}
                     >
                       <Check
                         className={cn(
