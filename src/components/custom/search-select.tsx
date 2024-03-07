@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/popover"
 
 type optionsProps = {
-    value: String
-    label: String
+    value: string
+    label: string
 }
 
 interface SearchSelectProps {
@@ -62,7 +62,7 @@ export function SearchSelect({ options,onChange }: SearchSelectProps) {
                 options?.map((item: optionsProps, key: number) => (
                     <CommandItem
                       key={key}
-                      value={item.value}
+                      value={item.value as string}
                       onSelect={onChangeSelect}
                     >
                       <Check
