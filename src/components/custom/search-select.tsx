@@ -59,9 +59,9 @@ export function SearchSelect({ options,onChange }: SearchSelectProps) {
           <CommandEmpty>No Options found.</CommandEmpty>
           <CommandGroup>
             {
-                options?.map((item: optionsProps) => (
+                options?.map((item: optionsProps, key: number) => (
                     <CommandItem
-                      key={item.value}
+                      key={key}
                       value={item.value}
                       onSelect={(currentValue: string) => onChangeSelect(currentValue)}
                     >
