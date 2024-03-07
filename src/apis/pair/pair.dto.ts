@@ -1,0 +1,37 @@
+export type currencyPair = {
+    id: string;
+    symbol: string;
+    base_currency: string;
+    traded_currency: string;
+    traded_currency_unit: string;
+    description: string;
+    ticker_id: string;
+    volume_precision: number;
+    price_precision: number;
+    price_round: number;
+    pricescale: number;
+    trade_min_base_currency: number;
+    trade_min_traded_currency: number;
+    has_memo: boolean;
+    memo_name: boolean | string;
+    trade_fee_percent: number;
+    trade_fee_percent_taker: number;
+    trade_fee_percent_maker: number;
+    url_logo: string;
+    url_logo_png: string;
+    is_maintenance: number;
+    is_market_suspended: number;
+    coingecko_id: string;
+    cmc_id: number;
+    old_ticker_id?: string;
+
+    last_price?: number;
+    lowest?: number;
+    highest?: number;
+    price_at?: number;
+    volume_idr?: number;
+    volume_coin?: number;
+    last_updated?: any;
+    prediction?: string;
+    prediction_price?: string;
+};
