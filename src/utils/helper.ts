@@ -23,9 +23,13 @@ function technicalAnalysis(data: CurrencyResponse) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
   }
 
-  function formatCryptoVolume(value: number) {
+  function formatCryptoVolume(value: number, currency: string) {
     if(value != null || value != 0){
-      return value?.toLocaleString('id-ID'); 
+      if(currency == 'idr'){
+        return value?.toLocaleString('id-ID'); 
+      }else{
+        return value;
+      }
     }else{
       return 0;
     }
