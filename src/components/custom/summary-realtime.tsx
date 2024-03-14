@@ -3,7 +3,7 @@ import { useIndodax } from "@/app/hooks/useIndodax";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table,TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCryptoVolume } from "@/utils/helper";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUp,ArrowDown } from 'lucide-react';
 import { Input } from "@/components/ui/input"
 import debounce from "lodash.debounce";
@@ -19,6 +19,8 @@ const RealtimeMarketPrediction: React.FC<RealtimeMarketPredictionProps> = ({ lis
   const { marketData,Loading } = useIndodax({ Initsummary24:true })
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [processedData, setProcessedData] = useState<any[]>([]);
+  const prevProcessedDataRef = useRef<any[]>([]); // Ref to hold the previous state for comparison
+
   const debouncedSearchTerm = useMemo(() => debounce(setSearchTerm, 300), []);
 
     useEffect(() => {
@@ -71,6 +73,7 @@ const RealtimeMarketPrediction: React.FC<RealtimeMarketPredictionProps> = ({ lis
           })
           .sort(sortPredictions); 
           setProcessedData(updatedData);
+          prevProcessedDataRef.current = processedData;
       }
     }, [Loading, marketData]);
 
@@ -86,6 +89,12 @@ const RealtimeMarketPrediction: React.FC<RealtimeMarketPredictionProps> = ({ lis
     const filteredData = useMemo(() => processedData.filter(data =>
       data.traded_currency.toLowerCase().includes(searchTerm.toLowerCase())
     ), [processedData, searchTerm]);
+
+    const hasDataChanged = (currentItem: currencyPair, index: number) => {
+        const prevItem = prevProcessedDataRef.current[index];
+        return prevItem && currentItem.last_price !== prevItem.last_price;
+      };
+    
 
 
     return(
@@ -103,7 +112,7 @@ const RealtimeMarketPrediction: React.FC<RealtimeMarketPredictionProps> = ({ lis
                 <Input onChange={handleSearchChange} type="text" placeholder="Search ....." />
               </div>
           </CardHeader>
-          <CardContent className="h-[750px] overflow-y-auto">
+          <CardContent>
           <Table>
               <TableHeader>
                 <TableRow>
@@ -117,7 +126,7 @@ const RealtimeMarketPrediction: React.FC<RealtimeMarketPredictionProps> = ({ lis
               </TableHeader>
               <TableBody>
                 {filteredData?.map((data: currencyPair, key) => (
-                  <TableRow key={key}>
+                  <TableRow className={`${hasDataChanged(data,key) ? 'bg-green-100' : ''}`} key={key}>
                     <TableCell className="font-bold uppercase">{data.traded_currency}</TableCell>
                     <TableCell>
                         <div className="flex flex-col">
