@@ -7,8 +7,8 @@ export type CurrencyResponse = {
     sell: string,
     server_time: number,
     name: string,
-    // Add an index signature to support dynamic keys
     [key: string]: string | number;
+    [key: `vol_${string}`]: string;
 };
 
 export type currency24 = {

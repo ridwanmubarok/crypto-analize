@@ -2,10 +2,46 @@
 
 import Image from "next/image";
 import { usePair } from "./hooks/usePair";
-import RealtimeMarketPrediction from "@/components/custom/realtime-prediction";
+import SummaryRealtime from "@/components/custom/summary-realtime";
+import { useSummary } from "./hooks/useSummary";
+import { useState } from "react";
 
 export default function Home() {
   const { pair } = usePair();
+  const { summary } = useSummary();
+  const [currencyFormat, setCurrencyFormat] = useState(true);
+
+  const changeCurrency = (val: boolean) => {
+    setCurrencyFormat(val)
+  }
+  
+  const processData = Object.entries(summary)
+  .filter(([key, _]) => currencyFormat ? key.endsWith('_idr') : key.endsWith('_usdt')) 
+  .map(([key, value]) => ({
+    new_id: key,
+    ...value
+  })); 
+  const initialData = pair
+  .filter(item => currencyFormat ? item.ticker_id.endsWith('_idr') : item.ticker_id.endsWith('_usdt'))
+  .map(item => {
+    const matchedData = processData.find(processItem => processItem.new_id === item.ticker_id);
+    if (!matchedData) return { ...item }; 
+    const volumeCoinKey: keyof typeof matchedData = `vol_${item.ticker_id.split('_')[0]}` as keyof typeof matchedData;
+    const volume_coin = matchedData[volumeCoinKey] ?? 0;
+    return matchedData ? {
+      ...item,
+      ...matchedData,
+      last_price: matchedData.last || 0,
+      lowest: matchedData.low || 0,
+      highest: matchedData.high || 0,
+      volume_idr: matchedData.vol_idr || 0,
+      volume_coin: volume_coin,
+      last_updated: null,
+      prediction: "",
+      prediction_price: "",
+    } : { ...item };
+  });
+
   return (
     <main className="flex min-h-screen flex-col lg:p-24 p-3">
       
@@ -31,11 +67,7 @@ export default function Home() {
 
         <div className="grid gap-3 grid-cols-12">
             <div className="col-span-12">
-              {
-                pair?.length > 0 && (
-                  <RealtimeMarketPrediction currency={'usdt'} listPairs={pair}/>
-                )
-              }
+              <SummaryRealtime setCurrency={(e)=> changeCurrency(e)} currency={currencyFormat} listPairs={initialData}/>
             </div>
         </div>
     </main>
